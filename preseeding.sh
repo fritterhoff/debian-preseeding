@@ -5,7 +5,7 @@ if [[ $EUID -ne 0 ]]; then
    exit 1
 fi
 
-BASE_FILE=debian-10.7.0-amd64-netinst.iso
+BASE_FILE=debian-11.0.0-amd64-netinst.iso
 
 generate(){
         echo -e "# ----\n# Auto generated script\n# ----" > preseed.cfg
@@ -13,7 +13,7 @@ generate(){
         cat $2 >> preseed.cfg
         cat partition-schema.cfg >> preseed.cfg
         rm -rf isofiles
-        apt install -y xorriso isolinux
+        apt install -y xorriso isolinux cpio
         xorriso -osirrox on -indev $BASE_FILE -extract / isofiles
         chmod +w -R isofiles/install.amd/
         gunzip isofiles/install.amd/initrd.gz
@@ -31,7 +31,7 @@ generate(){
                 -boot-load-size 4 -boot-info-table isofiles
 }
 
-wget https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-10.7.0-amd64-netinst.iso
+wget https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/$BASE_FILE
 
 generate bios bios-header.cfg
 generate uefi uefi-header.cfg
